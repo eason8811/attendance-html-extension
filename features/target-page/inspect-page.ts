@@ -1,4 +1,7 @@
-import { isTargetAttendanceUrl } from "./target-config";
+import {
+  isLocalAttendanceSnapshotUrl,
+  isTargetAttendanceUrl,
+} from "./target-config";
 
 const REQUIRED_HEADERS = ["序号", "员工编号", "考勤日期"] as const;
 
@@ -41,10 +44,14 @@ export interface AttendancePageInfo {
   headers: string[];
 }
 
+export interface AttendancePageInspection extends AttendancePageInfo {
+  source: "online" | "local-snapshot";
+}
+
 export function inspectAttendancePage(
   input: string | URL,
   documentRef: Document,
-): AttendancePageInfo {
+): AttendancePageInspection {
   if (!isTargetAttendanceUrl(input)) {
     throw new TargetPageInspectionError(
       "URL_MISMATCH",
@@ -126,6 +133,7 @@ export function inspectAttendancePage(
   const tableSignature = signatureOf(table.querySelector("tbody")?.textContent ?? "");
 
   return {
+    source: isLocalAttendanceSnapshotUrl(input) ? "local-snapshot" : "online",
     title,
     totalRecords,
     totalPages,
@@ -148,7 +156,7 @@ export function waitForAttendancePage(
     previousTableSignature?: string;
     signal?: AbortSignal;
   } = {},
-): Promise<AttendancePageInfo> {
+): Promise<AttendancePageInspection> {
   const { timeoutMs = 5_000, stableMs = 0, expectedPage, previousTableSignature, signal } = options;
   if (signal?.aborted) {
     return Promise.reject(new TargetPageInspectionError("CANCELLED", "页面检查已取消。"));
@@ -184,7 +192,7 @@ export function waitForAttendancePage(
       signal?.removeEventListener("abort", onAbort);
     }
 
-    function finish(result: AttendancePageInfo | TargetPageInspectionError) {
+    function finish(result: AttendancePageInspection | TargetPageInspectionError) {
       if (settled) return;
       settled = true;
       cleanup();
@@ -198,7 +206,7 @@ export function waitForAttendancePage(
 
     function checkPage() {
       if (settled) return;
-      let page: AttendancePageInfo;
+      let page: AttendancePageInspection;
       try {
         page = inspectAttendancePage(input, documentRef);
       } catch (nextError) {

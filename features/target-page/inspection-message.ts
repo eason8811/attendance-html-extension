@@ -1,4 +1,7 @@
-import type { AttendancePageInfo, TargetPageErrorCode } from "./inspect-page";
+import type {
+  AttendancePageInspection,
+  TargetPageErrorCode,
+} from "./inspect-page";
 
 export const INSPECT_ATTENDANCE_PAGE = "attendance:inspect-page" as const;
 export const WAIT_FOR_ATTENDANCE_PAGE = "attendance:wait-page" as const;
@@ -37,11 +40,11 @@ export type AttendanceContentResponse<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: TargetPageErrorCode; message: string } };
 
-export type InspectAttendancePageResponse = AttendanceContentResponse<AttendancePageInfo>;
-export type WaitForAttendancePageResponse = AttendanceContentResponse<AttendancePageInfo>;
+export type InspectAttendancePageResponse = AttendanceContentResponse<AttendancePageInspection>;
+export type WaitForAttendancePageResponse = AttendanceContentResponse<AttendancePageInspection>;
 export type RequestAttendancePageResponse = AttendanceContentResponse<{ requestedPage: number }>;
 export type CaptureAttendancePageResponse = AttendanceContentResponse<{
-  page: AttendancePageInfo;
+  page: AttendancePageInspection;
   html: string;
 }>;
 

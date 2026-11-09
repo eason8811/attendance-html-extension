@@ -1,4 +1,7 @@
-import { isTargetAttendanceUrl } from "@/features/target-page/target-config";
+import {
+  isTargetAttendanceUrl,
+  TARGET_CONTENT_SCRIPT_MATCHES,
+} from "@/features/target-page/target-config";
 import {
   TargetPageInspectionError,
   inspectAttendancePage,
@@ -13,9 +16,7 @@ import { requestAttendancePage } from "@/features/target-page/pagination-adapter
 import { serializeAttendanceDocument } from "@/features/target-page/snapshot";
 
 export default defineContentScript({
-  matches: [
-    "https://ncpc.ibuy.ccb.com:9092/member/techworkload/queryMonWorkLoadAttendanceDetails.htm*",
-  ],
+  matches: [...TARGET_CONTENT_SCRIPT_MATCHES],
   main() {
     if (!isTargetAttendanceUrl(location.href)) return;
 

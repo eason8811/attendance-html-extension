@@ -39,7 +39,7 @@ import {
   runAttendanceCollection,
   type CollectionTaskState,
 } from "@/features/collection/collection-task";
-import type { AttendancePageInfo } from "@/features/target-page/inspect-page";
+import type { AttendancePageInspection } from "@/features/target-page/inspect-page";
 import {
   INSPECT_ATTENDANCE_PAGE,
   type InspectAttendancePageResponse,
@@ -86,7 +86,7 @@ function App() {
   const [notice, setNotice] = useState<Notice | null>(null);
   const [lastProbe, setLastProbe] = useState<{ fileName: string; bytes: number } | null>(null);
   const [targetStatus, setTargetStatus] = useState<TargetStatus>("checking");
-  const [targetPage, setTargetPage] = useState<AttendancePageInfo | null>(null);
+  const [targetPage, setTargetPage] = useState<AttendancePageInspection | null>(null);
   const [targetDetail, setTargetDetail] = useState("正在检查当前活动标签页。");
   const [taskState, setTaskState] = useState<CollectionTaskState>(EMPTY_TASK);
   const collectionController = useRef<AbortController | null>(null);
@@ -118,10 +118,16 @@ function App() {
 
       setTargetPage(response.value);
       setTargetStatus("ready");
-      setTargetDetail("页面地址、标题、表格表头和分页信息均已通过检查。");
+      setTargetDetail(
+        response.value.source === "local-snapshot"
+          ? "本地 HTML 样例结构已通过检查。静态文件不支持分页采集；请打开在线考勤明细页面进行采集。"
+          : "页面地址、标题、表格表头和分页信息均已通过检查。",
+      );
     } catch {
       setTargetStatus("not-target");
-      setTargetDetail("当前页不是目标页面，或扩展刚加载后尚未刷新该网页。");
+      setTargetDetail(
+        "当前标签页没有返回采集脚本。打开本地样例时，请到 chrome://extensions 的扩展详情启用“允许访问文件网址”，再刷新 HTML；在线页面请确认地址匹配并刷新。",
+      );
     }
   }
 
@@ -367,6 +373,7 @@ function App() {
     : 0;
   const canStartCollection =
     targetStatus === "ready" &&
+    targetPage?.source === "online" &&
     directoryHandle !== null &&
     permission === "granted" &&
     busyAction === null &&
@@ -430,7 +437,9 @@ function App() {
                   {targetStatus === "checking"
                     ? "检测中"
                     : targetStatus === "ready"
-                      ? "已识别"
+                      ? targetPage?.source === "local-snapshot"
+                        ? "样例已识别"
+                        : "已识别"
                       : targetStatus === "error"
                         ? "结构异常"
                         : "未匹配"}
@@ -611,7 +620,7 @@ function App() {
 
         <footer className="flex items-start gap-2 px-1 pb-2 text-[11px] leading-4 text-muted-foreground">
           <ShieldCheck aria-hidden="true" size={14} className="mt-0.5 shrink-0 text-primary" />
-          <span>扩展只请求目标页面匹配和本地配置权限；页面快照仅写入你选择的目录。</span>
+          <span>页面检查仅在目标在线页面或本地“考勤明细.html”样例上启用；快照仅写入你选择的目录。</span>
         </footer>
 
         {lastProbe ? <span className="sr-only">上次目录写入测试通过。</span> : null}
