@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.75rem;
+  --background: oklch(0.975 0.008 245);
+  --foreground: oklch(0.23 0.025 250);
+  --card: oklch(0.998 0.003 245);
+  --card-foreground: oklch(0.23 0.025 250);
+  --popover: oklch(0.998 0.003 245);
+  --popover-foreground: oklch(0.23 0.025 250);
+  --primary: oklch(0.48 0.09 190);
+  --primary-foreground: oklch(0.99 0.005 190);
+  --secondary: oklch(0.94 0.012 240);
+  --secondary-foreground: oklch(0.28 0.035 245);
+  --muted: oklch(0.95 0.01 245);
+  --muted-foreground: oklch(0.53 0.025 250);
+  --accent: oklch(0.92 0.045 190);
+  --accent-foreground: oklch(0.3 0.065 190);
+  --destructive: oklch(0.55 0.17 28);
+  --border: oklch(0.89 0.014 245);
+  --input: oklch(0.89 0.014 245);
+  --ring: oklch(0.58 0.1 190);
+  --status-success: oklch(0.48 0.12 154);
+  --status-warning: oklch(0.65 0.13 76);
+  --status-error: oklch(0.55 0.17 28);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html,
+  body,
+  #root {
+    min-width: 320px;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button {
+    font: inherit;
+  }
+}
+
+.panel-shell {
+  background:
+    radial-gradient(ellipse at 100% 0%, oklch(0.93 0.045 190 / 0.4), transparent 42%),
+    var(--background);
+}
+
+.step-line {
+  background: linear-gradient(90deg, var(--primary) 0 50%, var(--border) 50% 100%);
+}
+
+.status-success {
+  color: var(--status-success);
+}
+
+.status-warning {
+  color: var(--status-warning);
+}
+
+.status-error {
+  color: var(--status-error);
+}

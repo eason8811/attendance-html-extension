@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>考勤明细</title>
+  </head>
+  <body>
+    <form id="frm">
+      <section class="ebs-table">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>员工编号</th>
+                <th>考勤日期</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>MASKED-001</td>
+                <td>2026-11-01</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>MASKED-002</td>
+                <td>2026-11-02</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <select id="ebidding_page_size">
+        <option value="20">20条/页</option>
+        <option value="50" selected>50条/页</option>
+      </select>
+      <input id="pgnIpt" value="1" />
+      <button id="pageGo" type="button">跳转</button>
+      <input id="ebidding_page_no" value="1" />
+
+      <nav class="table-pagination">
+        <div class="left-pagination-info">共 1,143 条信息，共 23 页，当前第 1 页</div>
+        <div class="ebs-pager">
+          <ul class="pagination">
+            <li class="active"><a class="page" page="1" href="#">1</a></li>
+            <li><a class="page" page="2" href="#">2</a></li>
+            <li><a class="page" page="23" href="#">23</a></li>
+            <li><a class="page" page="2" aria-label="Next" href="#">下一页</a></li>
+          </ul>
+        </div>
+      </nav>
+    </form>
+  </body>
+</html>
