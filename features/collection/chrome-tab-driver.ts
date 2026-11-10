@@ -18,6 +18,8 @@ import {
 const PAGE_WAIT_TIMEOUT_MS = 25_000;
 const PAGE_CHECK_WINDOW_MS = 1_200;
 const PAGE_CHECK_INTERVAL_MS = 250;
+const PAGE_TURN_BASE_DELAY_MS = 150;
+const PAGE_TURN_RANDOM_DELAY_MS = 150;
 
 export function createChromeTabDriver(tabId: number, signal?: AbortSignal): AttendancePageDriver {
   return {
@@ -32,6 +34,11 @@ export function createChromeTabDriver(tabId: number, signal?: AbortSignal): Atte
     },
 
     async requestPage(page) {
+      await assertTabActive(tabId, signal);
+      await delay(
+        PAGE_TURN_BASE_DELAY_MS + Math.random() * PAGE_TURN_RANDOM_DELAY_MS,
+        signal,
+      );
       await assertTabActive(tabId, signal);
       try {
         const response = await sendMessage<RequestAttendancePageResponse>(
